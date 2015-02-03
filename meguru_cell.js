@@ -1,3 +1,4 @@
+var print = console.log
 
 var table = [
   ["a","b","c","d","e"],
@@ -9,6 +10,7 @@ var table = [
 
 var height = table.length;
 var width = table[0].length;
+
 
 var ARROUND_CELL = [
   [-1,1],
@@ -29,10 +31,24 @@ function checkStr(str) {
   
   for (var i = 0; i < str_a.length; i++) {
     var current = currentSlots(str_a[i]);
-    console.log(current);
+    //console.log(current);
     var arroundCell = getArroundCell(current[0], current[1]);
-    console.log(arroundCell);
+    //console.log(arroundCell);
+    var isLarge = (table[current[0]][current[1]].toUpperCase() == str_a[i]) ? true : false;
+    resultValue = rotateCell(arroundCell, isLarge);
+    arroundValue.push(resultValue);
+
+    for (var j = 0; j < arroundCell.length; j++) {
+      var x = arroundCell[j][0];
+      var y = arroundCell[j][1];
+      table[y][x] = resultValue[j];
+    }
   }
+
+  var result = arroundValue.pop();
+  result = result.sort();
+
+  print(result);
 }
 
 function currentSlots(c) {
@@ -46,7 +62,7 @@ function currentSlots(c) {
 }
 
 function getArroundCell(x, y) {
-  arround = new Array();
+  var arround = new Array();
   for (var i = 0; i < ARROUND_CELL.length; i++) {
     var cell = ARROUND_CELL[i];
     var _y = cell[0];
@@ -56,7 +72,7 @@ function getArroundCell(x, y) {
       continue;
     }
     if (y + _y < 0 || y + _y > width) {
-        continue;
+      continue;
     }
     //console.log([y + _y, x + _x]);
     arround.push([y + _y, x + _x]);
@@ -64,8 +80,18 @@ function getArroundCell(x, y) {
   return arround;
 }
 
-function rotateCell(value,c) {
-
+function rotateCell(arroundCell,isLarge) {
+  var value = new Array();
+  for(var i = 0; i < arroundCell.length; i++) {
+    value.push(table[arroundCell[i][0]][arroundCell[i][1]]);
+  }
+  //print(value);
+  if (isLarge) {
+    value.push(value.shift());
+  } else {
+    value.unshift(value.pop());
+  }
+  return value;
 }
 
-checkStr("R")
+checkStr("a")
